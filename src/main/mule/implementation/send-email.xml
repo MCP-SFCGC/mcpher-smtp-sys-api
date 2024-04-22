@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:email="http://www.mulesoft.org/schema/mule/email"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/email http://www.mulesoft.org/schema/mule/email/current/mule-email.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<sub-flow name="send-email-impl-subflow" doc:id="8a45b982-a2b1-4758-8d82-0c252e6bcc82" >
+		<logger level="INFO" doc:name="Map Request" doc:id="5d90212e-1838-4166-8bdc-d4c4d8afa1bd" message="#[payload]"/>
+		<ee:transform doc:name="Set originalPayload" doc:id="1de055fe-a9e7-4a66-91fe-47c3b8f0612d" >
+			<ee:message >
+			</ee:message>
+			<ee:variables >
+				<ee:set-variable variableName="originalPayload" ><![CDATA[%dw 2.0
+output application/json
+var setAttachments = if (payload.attachments != null) {
+	(payload.attachments.filename) : payload.attachments.content
+} else null
+---
+{
+	subject: payload.subject,
+	content: payload.content,
+	attachment: setAttachments
+}]]></ee:set-variable>
+			</ee:variables>
+		</ee:transform>
+		<foreach doc:name="For Each" doc:id="a5a71dc4-f1b2-47f5-984d-207f2b7fe3ae" collection="#[payload.recipients]">
+			<ee:transform doc:name="Set recipient" doc:id="8c3855a3-b6e2-45d4-90ff-8a1ad4472b33" >
+				<ee:message >
+				</ee:message>
+				<ee:variables >
+					<ee:set-variable variableName="recipient" ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-variable>
+				</ee:variables>
+			</ee:transform>
+			<flow-ref doc:name="send-email-subflow" doc:id="6cd2b346-859f-4206-8efc-30e897e9eba4" name="send-email-subflow" />
+		</foreach>
+		<logger level="INFO" doc:name="Map Response" doc:id="ca52f039-53cf-4308-a595-6f2a850fe341" message="#[payload]"/>
+	</sub-flow>
+</mule>

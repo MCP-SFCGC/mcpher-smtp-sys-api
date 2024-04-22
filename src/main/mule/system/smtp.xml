@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:email="http://www.mulesoft.org/schema/mule/email"
+	xmlns:api-gateway="http://www.mulesoft.org/schema/mule/api-gateway" xmlns:salesforce="http://www.mulesoft.org/schema/mule/salesforce"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns:secure-properties="http://www.mulesoft.org/schema/mule/secure-properties" xmlns:sftp="http://www.mulesoft.org/schema/mule/sftp" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="
+http://www.mulesoft.org/schema/mule/email http://www.mulesoft.org/schema/mule/email/current/mule-email.xsd http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/sftp http://www.mulesoft.org/schema/mule/sftp/current/mule-sftp.xsd
+http://www.mulesoft.org/schema/mule/secure-properties http://www.mulesoft.org/schema/mule/secure-properties/current/mule-secure-properties.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/salesforce http://www.mulesoft.org/schema/mule/salesforce/current/mule-salesforce.xsd
+http://www.mulesoft.org/schema/mule/api-gateway http://www.mulesoft.org/schema/mule/api-gateway/current/mule-api-gateway.xsd">
+
+	<sub-flow name="send-email-subflow" doc:id="b4fd707e-d05b-4c47-bd9d-c965f418c32e" >
+		<logger level="INFO" doc:name="Map Request" doc:id="9f6ca16a-6b72-4277-939a-7874fa647444" message="#[payload]" />
+		<email:send doc:name="Send" doc:id="63f974e7-651b-48d7-a2b4-99340bd04bdd" config-ref="Email_SMTP_Outlook" subject="#[vars.originalPayload.subject]" fromAddress="mulesoftlogs@mcpher.com.au">
+			<email:to-addresses >
+				<email:to-address value="#[vars.recipient]" />
+			</email:to-addresses>
+			<email:body contentType="text/plain" encoding="UTF-8">
+				<email:content ><![CDATA[#[vars.originalPayload.content]]]></email:content>
+			</email:body>
+			<email:attachments ><![CDATA[#[vars.originalPayload.attachment]]]></email:attachments>
+		</email:send>
+		<logger level="INFO" doc:name="Map Response" doc:id="5dc3dbbe-7df5-403c-8f14-ea54460255b3" message="#[payload]" />
+	</sub-flow>
+</mule>

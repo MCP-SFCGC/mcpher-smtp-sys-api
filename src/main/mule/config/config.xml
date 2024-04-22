@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:email="http://www.mulesoft.org/schema/mule/email"
+	xmlns:api-gateway="http://www.mulesoft.org/schema/mule/api-gateway" xmlns:salesforce="http://www.mulesoft.org/schema/mule/salesforce"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns:secure-properties="http://www.mulesoft.org/schema/mule/secure-properties" xmlns:sftp="http://www.mulesoft.org/schema/mule/sftp" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="
+http://www.mulesoft.org/schema/mule/email http://www.mulesoft.org/schema/mule/email/current/mule-email.xsd http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/sftp http://www.mulesoft.org/schema/mule/sftp/current/mule-sftp.xsd
+http://www.mulesoft.org/schema/mule/secure-properties http://www.mulesoft.org/schema/mule/secure-properties/current/mule-secure-properties.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/salesforce http://www.mulesoft.org/schema/mule/salesforce/current/mule-salesforce.xsd
+http://www.mulesoft.org/schema/mule/api-gateway http://www.mulesoft.org/schema/mule/api-gateway/current/mule-api-gateway.xsd">
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="72c46c03-769f-4afc-b924-50f0eab9154b" >
+		<http:listener-connection host="${http.host}" port="${http.port}" readTimeout="${http.readtimeout}"/>
+	</http:listener-config>
+	<email:smtp-config name="Email_SMTP" doc:name="Email SMTP" doc:id="cbea15d7-df04-438d-85ee-60a5e5866e41" >
+		<email:smtp-connection host="${smtp.host}" user="${smtp.username}" password="${smtp.password}" connectionTimeout="50" readTimeout="50" writeTimeout="50" port="${smtp.port}">
+			<email:properties >
+				<email:property key="mail.smtp.ssl.enable" value="true" />
+			</email:properties>
+		</email:smtp-connection>
+	</email:smtp-config>
+	<configuration-properties doc:name="Configuration properties" doc:id="5c7d0e88-f8ce-41ce-a11e-9b1da84766e5" file="properties/${mule.env}.yaml" />
+	<email:smtp-config name="Email_SMTP_Outlook" doc:name="Email SMTP" doc:id="e01bfe86-74d3-4d64-bb4f-fbe40d96e602" >
+		<email:smtp-connection host="smtp.office365.com" port="587" user="mulesoftlogs@mcpher.com.au" password="T&amp;529278125822uj" >
+			<email:properties >
+				<email:property key="mail.smtp.ssl.enable" value="false" />
+				<email:property key="mail.transport.protocol" value="smtp" />
+				<email:property key="mail.smtp.starttls.enable" value="true" />
+			</email:properties>
+		</email:smtp-connection>
+	</email:smtp-config>
+</mule>

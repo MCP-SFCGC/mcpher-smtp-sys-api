@@ -1,0 +1,9 @@
+sftp:
+    pathAU: "/MCP/SALESFORCE/AU/import/"
+    pathNZ: "/MCP/SALESFORCE/NZ/import/"
+    host: "![5FmJqFVIqla3q2XPXuI33g==]"
+    username: "![3ffKWCLLOLw7urc3AACBVg==]"
+    password: "![QL0i47hf8/RjR4DAHxYQCA==]"
+    
+api:
+  id: "19159993"

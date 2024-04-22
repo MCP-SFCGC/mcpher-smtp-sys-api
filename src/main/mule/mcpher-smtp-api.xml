@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:email="http://www.mulesoft.org/schema/mule/email"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/email http://www.mulesoft.org/schema/mule/email/current/mule-email.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<flow name="mcpher-smtp-api-flow" doc:id="7f2013d9-dc89-4692-9d8a-e4293d295137" >
+		<http:listener doc:name="Listener" doc:id="755250b2-7fab-469b-ba1e-6933127183e5" config-ref="HTTP_Listener_config" path="/email"/>
+		<flow-ref doc:name="send-email-impl-subflow" doc:id="3a27bd5a-84c0-4924-88cc-a7fc22f38d36" name="send-email-impl-subflow"/>
+		<error-handler >
+			<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="14c31abc-8bdd-409a-8f3a-ecd7114bc53a" type="EMAIL:CONNECTIVITY">
+				<ee:transform doc:name="Transform Message" doc:id="6607c693-b159-463c-ab12-fa3ca8b4fdcb" >
+					<ee:message >
+						<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	"Error": "Connectivity",
+	"Message": error.description
+}]]></ee:set-payload>
+					</ee:message>
+				</ee:transform>
+			</on-error-propagate>
+			<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate1" doc:id="b22af0d5-6464-45b9-8801-729d2e045b80" type="EMAIL:SEND" >
+				<ee:transform doc:name="Transform Message" doc:id="7f3b28c0-a50b-4c1a-a2d1-8ebc718d2be3" >
+					<ee:message >
+						<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	"Error": "Send",
+	"Message": error.description
+}]]></ee:set-payload>
+					</ee:message>
+				</ee:transform>
+			</on-error-propagate>
+			<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate2" doc:id="4fbc444f-320e-4d82-a140-439c396babe2" type="ANY" >
+				<ee:transform doc:name="Transform Message" doc:id="80c9c492-2791-4fbb-bc51-dd3b719481ee" >
+					<ee:message >
+						<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	"Error": "Any",
+	"Message": error.description
+}]]></ee:set-payload>
+					</ee:message>
+				</ee:transform>
+			</on-error-propagate>
+		</error-handler>
+	</flow>
+</mule>
