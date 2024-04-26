@@ -11,18 +11,18 @@ http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/htt
 http://www.mulesoft.org/schema/mule/salesforce http://www.mulesoft.org/schema/mule/salesforce/current/mule-salesforce.xsd
 http://www.mulesoft.org/schema/mule/api-gateway http://www.mulesoft.org/schema/mule/api-gateway/current/mule-api-gateway.xsd">
 	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="72c46c03-769f-4afc-b924-50f0eab9154b" >
-		<http:listener-connection host="${http.host}" port="${http.port}" readTimeout="${http.readtimeout}"/>
+		<http:listener-connection host="0.0.0.0" port="${http.port}" readTimeout="${http.readtimeout}"/>
 	</http:listener-config>
-	<email:smtp-config name="Email_SMTP" doc:name="Email SMTP" doc:id="cbea15d7-df04-438d-85ee-60a5e5866e41" >
+	<!--  <email:smtp-config name="Email_SMTP" doc:name="Email SMTP" doc:id="cbea15d7-df04-438d-85ee-60a5e5866e41" >
 		<email:smtp-connection host="${smtp.host}" user="${smtp.username}" password="${smtp.password}" connectionTimeout="50" readTimeout="50" writeTimeout="50" port="${smtp.port}">
 			<email:properties >
 				<email:property key="mail.smtp.ssl.enable" value="true" />
 			</email:properties>
 		</email:smtp-connection>
-	</email:smtp-config>
-	<configuration-properties doc:name="Configuration properties" doc:id="5c7d0e88-f8ce-41ce-a11e-9b1da84766e5" file="properties/${mule.env}.yaml" />
+	</email:smtp-config> -->
+	<configuration-properties doc:name="Configuration properties" doc:id="5c7d0e88-f8ce-41ce-a11e-9b1da84766e5" file="properties/config-${mule.env}.yaml" />
 	<email:smtp-config name="Email_SMTP_Outlook" doc:name="Email SMTP" doc:id="e01bfe86-74d3-4d64-bb4f-fbe40d96e602" >
-		<email:smtp-connection host="smtp.office365.com" port="587" user="mulesoftlogs@mcpher.com.au" password="T&amp;529278125822uj" >
+		<email:smtp-connection host="${smtp.host}" port="${smtp.port}" user="${smtp.username}" password="${secure::smtp.password}" >
 			<email:properties >
 				<email:property key="mail.smtp.ssl.enable" value="false" />
 				<email:property key="mail.transport.protocol" value="smtp" />
@@ -30,4 +30,8 @@ http://www.mulesoft.org/schema/mule/api-gateway http://www.mulesoft.org/schema/m
 			</email:properties>
 		</email:smtp-connection>
 	</email:smtp-config>
+	<global-property doc:name="Global Property" doc:id="c76e3fc6-1609-412c-9071-33cf9ff19445" name="mule.env" value="LOCAL" />
+	<secure-properties:config name="Secure_Properties_Config" doc:name="Secure Properties Config" doc:id="3f84bff6-aebe-4217-a807-d2a4e69eb087" file="properties/config-${mule.env}.yaml" key="${vault.key}" >
+		<secure-properties:encrypt algorithm="Blowfish" />
+	</secure-properties:config>
 </mule>

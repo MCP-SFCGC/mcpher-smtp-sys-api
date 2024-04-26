@@ -1,0 +1,15 @@
+api:
+  id: ""
+
+http:
+  host: "localhost"
+  port: "8082"
+  readtimeout: "60000"
+  basepath: ""
+
+smtp:
+    host: "smtp.office365.com"
+    port: "587"
+    username: "mulesoftlogs@mcpher.com.au"
+    password: "![0VLEZsHsThAcF2i5iRSPQ01obGZk9cFZ]"
+    from: "mulesoftlogs@mcpher.com.au"

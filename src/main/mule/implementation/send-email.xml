@@ -19,8 +19,8 @@ var setAttachments = if (payload.attachments != null) {
 ---
 {
 	subject: payload.subject,
-	content: payload.content,
-	attachment: setAttachments
+	(attachment: setAttachments) if !isEmpty(setAttachments),
+	content: payload.content
 }]]></ee:set-variable>
 			</ee:variables>
 		</ee:transform>
